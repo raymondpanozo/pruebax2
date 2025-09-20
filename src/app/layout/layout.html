@@ -1,0 +1,37 @@
+<!-- Responsive navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation" aria-label="Main navigation">
+      <div class="container px-lg-5">
+        <a class="navbar-brand" href="#home">Accessible Demo</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+          data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
+          aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="#home" id="nav-home">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#about" id="nav-about">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="#contact" id="nav-contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Main container (router outlet) -->
+    <main id="app" class="container px-lg-5 py-5" role="main" aria-live="polite" tabindex="-1">
+      <!-- El contenido de cada ruta se inyecta dinámicamente aquí -->
+    </main>
+
+<main>
+
+<router-outlet></router-outlet>
+
+</main>
+
+<!-- Footer-->
+    <footer class="py-5 bg-dark" role="contentinfo">
+      <div class="container">
+        <p class="m-0 text-center text-white">
+          © 2025 Accessible Demo Website. All rights reserved.
+        </p>
+      </div>
+    </footer>

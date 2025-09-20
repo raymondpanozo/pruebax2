@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Demo accesible con Bootstrap 5, SPA routing y notificaciones" />
+    <meta name="author" content="Tu Nombre" />
+    <title>Demo Accesible con Router + Notificaciones</title>
+    
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Bootstrap core CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      .visually-hidden { 
+        position: absolute !important; 
+        height: 1px; width: 1px; 
+        overflow: hidden; 
+        clip: rect(1px,1px,1px,1px); 
+        white-space: nowrap; 
+      }
+    </style>
+
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+  <app-root></app-root>
+
+<!-- SPA Router + A11y + Notificaciones -->
+    <script>
+      // Contenido de las rutas
+      const routes = {
+        "#home": `
+          <header class="p-4 p-lg-5 bg-light rounded-3 text-center">
+            <div class="m-4 m-lg-5">
+              <h1 class="display-5 fw-bold text-dark">A warm welcome!</h1>
+              <p class="fs-4 text-dark">
+                Bootstrap utility classes are used to create this jumbotron. 
+                Accessible, responsive, and now with notifications.
+              </p>
+              <a class="btn btn-primary btn-lg mb-3" href="#about">Call to action</a>
+              <div>
+                <button id="enableNotifications" class="btn btn-outline-success btn-lg me-2">Permitir notificaciones</button>
+                <button id="testNotification" class="btn btn-outline-info btn-lg">Probar notificación</button>
+              </div>
+            </div>
+          </header>
+          <section class="pt-4" aria-labelledby="features-title">
+            <h2 id="features-title" class="visually-hidden">Main Features</h2>
+            <div class="row gx-lg-5">
+              <div class="col-lg-6 col-xxl-4 mb-5">
+                <div class="card bg-light border-0 h-100">
+                  <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
+                      <i class="bi bi-collection" role="img" aria-label="Layout icon"></i>
+                    </div>
+                    <h3 class="fs-4 fw-bold">Fresh new layout</h3>
+                    <p class="mb-0">With Bootstrap 5, we've created a fresh new layout for this template!</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-xxl-4 mb-5">
+                <div class="card bg-light border-0 h-100">
+                  <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
+                      <i class="bi bi-cloud-download" role="img" aria-label="Download icon"></i>
+                    </div>
+                    <h3 class="fs-4 fw-bold">Free to download</h3>
+                    <p class="mb-0">As always, Start Bootstrap has a powerful collection of free templates.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        `,
+        "#about": `
+          <header class="p-4 p-lg-5 bg-light rounded-3 text-center">
+            <h1 class="display-5 fw-bold text-dark">About Us</h1>
+            <p class="fs-4 text-dark">We build accessible Bootstrap demos with modern features like routing and notifications.</p>
+          </header>
+        `,
+        "#contact": `
+          <header class="p-4 p-lg-5 bg-light rounded-3 text-center">
+            <h1 class="display-5 fw-bold text-dark">Contact</h1>
+            <p class="fs-4 text-dark">Get in touch with us for more accessible web solutions.</p>
+            <a class="btn btn-primary btn-lg" href="mailto:contact@example.com">Send Email</a>
+          </header>
+        `
+      };
+
+      // Renderiza la ruta actual
+      function renderRoute() {
+        const hash = window.location.hash || "#home";
+        const app = document.getElementById("app");
+        app.innerHTML = routes[hash] || "<h1>404</h1><p>Página no encontrada</p>";
+        app.focus();
+
+        // Actualiza aria-current en nav
+        document.querySelectorAll(".nav-link").forEach(link => {
+          link.removeAttribute("aria-current");
+          if (link.getAttribute("href") === hash) {
+            link.setAttribute("aria-current", "page");
+          }
+        });
+
+        // Re-asigna listeners de notificaciones si estamos en Home
+        if (hash === "#home") {
+          const enableBtn = document.getElementById("enableNotifications");
+          const testBtn = document.getElementById("testNotification");
+
+          if (enableBtn) {
+            enableBtn.addEventListener("click", () => {
+              if ("Notification" in window) {
+                Notification.requestPermission().then(permission => {
+                  if (permission === "granted") {
+                    alert("Notificaciones habilitadas");
+                  } else {
+                    alert("Permiso denegado para notificaciones");
+                  }
+                });
+              } else {
+                alert("Este navegador no soporta notificaciones.");
+              }
+            });
+          }
+
+          if (testBtn) {
+            testBtn.addEventListener("click", () => {
+              if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("🔔 Notificación de prueba", {
+                  body: "Esto es una prueba de notificación en tu sitio accesible.",
+                  icon: "assets/favicon.ico"
+                });
+              } else {
+                alert("Debes permitir notificaciones primero.");
+              }
+            });
+          }
+        }
+      }
+
+      // Inicializa el router
+      window.addEventListener("hashchange", renderRoute);
+      window.addEventListener("load", renderRoute);
+    </script>
+    
+  <noscript>Please enable JavaScript to continue using this application.</noscript>
+</body>
+</html>
